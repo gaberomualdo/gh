@@ -47,7 +47,7 @@
 
          var diff = Math.abs(rgba[0] - index_rgba[0]) + Math.abs(rgba[1] - index_rgba[1]) + Math.abs(rgba[2] - index_rgba[2]);
 
-         if(usedIndeces.indexOf(index) <= -1 && diff < (document.querySelector("input[type=number]").value * 10)){
+         if(usedIndeces.indexOf(index) <= -1 && diff < (document.querySelector("input[type=number]").value * 10) && indexOfMax(rgba) == indexOfMax(index_rgba)){
             usedIndeces.push(index);
             x = ((index / 4) % image.width) * 5;
             y = Math.floor((index / 4) / image.width) * 5;
@@ -81,6 +81,23 @@
       for(var index = 0;index < imageData.data.length;index += 4){
          magicWand(index, [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]]);
       }
+   }
+   function indexOfMax(arr) {
+      if (arr.length === 0) {
+         return -1;
+      }
+
+      var max = arr[0];
+      var maxIndex = 0;
+
+      for (var i = 1; i < arr.length; i++) {
+         if (arr[i] > max) {
+            maxIndex = i;
+            max = arr[i];
+         }
+      }
+
+      return maxIndex;
    }
 
    </script>
