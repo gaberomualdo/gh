@@ -77,10 +77,15 @@
             }
          }
       }
-
-      for(var index = 0;index < imageData.data.length;index += 4){
-         magicWand(index, [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]]);
+      while(usedIndeces.length < imageData.data.length / 4){
+         var index = Math.floor(Math.random() * (imageData.data.length / 4)) * 4;
+         if(usedIndeces.indexOf(index) <= -1){
+            magicWand(index, [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]]);
+         }
       }
+      /*for(var index = 0;index < imageData.data.length;index += 4){
+         magicWand(index, [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]]);
+      }*/
    }
    function indexOfMax(arr) {
       if (arr.length === 0) {
