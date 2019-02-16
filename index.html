@@ -7,17 +7,22 @@
    <title>GH</title>
 </head>
 <body>
-   <input onchange="go(this);" type="file" accept="image/gif, image/jpeg, image/png" style="display: block;float:left;clear:both;">
+   <div class="settings">
+      <strong>Enter Abstract Count (1 - 20):</strong>
+      <input type="number" value="1" oninput="if(this.value < 1){this.value=1;} if(this.value > 20){this.value=20;}">
+      <input type="file" accept="image/gif, image/jpeg, image/png">
+      <button onclick="go();">Go!</button>
+   </div>
    <canvas></canvas>
    <script>
    
-   function go(file_btn){
+   function go(){
       var image = new Image();
       var reader = new FileReader();
       reader.onload = function(e){
          image.src = e.target.result;
       }
-      reader.readAsDataURL(file_btn.files[0]);
+      reader.readAsDataURL(document.querySelector("input[type=file]").files[0]);
       image.onload = function() {
          algorithm(image);
       }
@@ -37,12 +42,12 @@
 
       var usedIndeces = [];
 
-      function magicWand(index, rgba){
+      function magicWand(index, rgba, direction){
          var index_rgba = [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]];
 
          var diff = Math.abs(rgba[0] - index_rgba[0]) + Math.abs(rgba[1] - index_rgba[1]) + Math.abs(rgba[2] - index_rgba[2]);
 
-         if(usedIndeces.indexOf(index) <= -1 && diff < 70){
+         if(usedIndeces.indexOf(index) <= -1 && diff < (document.querySelector("input[type=number]").value * 10)){
             usedIndeces.push(index);
             x = ((index / 4) % image.width) * 5;
             y = Math.floor((index / 4) / image.width) * 5;
@@ -50,17 +55,25 @@
             context.fillStyle = `rgba(${rgba.join(",")})`;
             context.fillRect(x, y, 5, 5);
 
-            if((index + 4) / 4 < image.width){
-               magicWand(index+4, rgba);
+            if((index + 4) / 4 < image.width && direction != "left"){
+               try{
+                  magicWand(index+4, rgba, "right");
+               }catch{}
             }
-            if(index > 0){
-               magicWand(index-4, rgba);
+            if(index > 0 && direction != "right"){
+               try{
+                  magicWand(index-4, rgba, "left");
+               }catch{}
             }
-            if(index - (4 * image.width) >= 0){
-               magicWand(index - (4 * image.width), rgba);
+            if(index - (4 * image.width) >= 0 && direction != "down"){
+               try{
+                  magicWand(index - (4 * image.width), rgba, "up");
+               }catch{}
             }
-            if(index + (4 * image.width) < imageData.data.length){
-               magicWand(index + (4 * image.width), rgba);
+            if(index + (4 * image.width) < imageData.data.length && direction != "up"){
+               try{
+                  magicWand(index + (4 * image.width), rgba, "down");
+               }catch{}
             }
          }
       }
