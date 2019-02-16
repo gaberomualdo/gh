@@ -35,14 +35,38 @@
       canvas.height = image.height*5;
       var context = canvas.getContext("2d");
 
-      function randomColor(){
-         return Math.floor(Math.random() * 256);
+      var usedIndeces = [];
+
+      function magicWand(index, rgba){
+         var index_rgba = [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]];
+
+         var diff = Math.abs(rgba[0] - index_rgba[0]) + Math.abs(rgba[1] - index_rgba[1]) + Math.abs(rgba[2] - index_rgba[2]);
+
+         if(usedIndeces.indexOf(index) <= -1 && diff < 70){
+            usedIndeces.push(index);
+            x = ((index / 4) % image.width) * 5;
+            y = Math.floor((index / 4) / image.width) * 5;
+
+            context.fillStyle = `rgba(${rgba.join(",")})`;
+            context.fillRect(x, y, 5, 5);
+
+            if((index + 4) / 4 < image.width){
+               magicWand(index+4, rgba);
+            }
+            if(index > 0){
+               magicWand(index-4, rgba);
+            }
+            if(index - (4 * image.width) >= 0){
+               magicWand(index - (4 * image.width), rgba);
+            }
+            if(index + (4 * image.width) < imageData.data.length){
+               magicWand(index + (4 * image.width), rgba);
+            }
+         }
       }
 
       for(var index = 0;index < imageData.data.length;index += 4){
-         var rgba = [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]];
-         context.fillStyle = `rgba(${rgba.join(",")})`;
-         context.fillRect(((index / 4) % image.width) * 5, Math.floor((index / 4) / image.width) * 5, 5, 5);
+         magicWand(index, [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]]);
       }
    }
 
