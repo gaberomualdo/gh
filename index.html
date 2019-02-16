@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>GH</title>
+</head>
+<body>
+   <input onchange="go(this);" type="file" accept="image/gif, image/jpeg, image/png">
+   <canvas></canvas>
+   <script>
+   
+   function go(file_btn){
+      var image = new Image();
+      var reader = new FileReader();
+      reader.onload = function(e){
+         image.src = e.target.result;
+      }
+      reader.readAsDataURL(file_btn.files[0]);
+      image.onload = function() {
+         algorithm(image);
+      }
+   }
+   function algorithm(image_data){
+      var image = document.createElement('canvas');
+      image.width = image_data.width;
+      image.height = image_data.height;
+      var image_context = image.getContext('2d');
+      image_context.drawImage(image_data, 0, 0);
+      var imageData = image_context.getImageData(0, 0, image.width, image.height);
+      
+      var canvas = document.querySelector("canvas");
+      canvas.width = image.width*5;
+      canvas.height = image.height*5;
+      var context = canvas.getContext("2d");
+
+      function randomColor(){
+         return Math.floor(Math.random() * 256);
+      }
+
+      for(var index = 0;index < imageData.data.length;index += 4){
+         var rgba = [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]];
+         context.fillStyle = `rgba(${rgba.join(",")})`;
+         context.fillRect(((index / 4) % image.width) * 5, Math.floor((index / 4) / image.width) * 5, 5, 5);
+      }
+   }
+
+   </script>
+</body>
+</html>
