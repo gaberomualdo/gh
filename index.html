@@ -77,16 +77,16 @@
             }
          }
       }
-      while(usedIndeces.length < imageData.data.length / 4){
-         var index = Math.floor(Math.random() * (imageData.data.length / 4)) * 4;
-         if(usedIndeces.indexOf(index) <= -1){
-            magicWand(index, [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]]);
-         }
-      }
+      var indeces = shuffle([...Array(image.width * image.height).keys()]);
+      indeces.forEach(function(index){
+         index = index * 4;
+         magicWand(index, [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]]);
+      });
       /*for(var index = 0;index < imageData.data.length;index += 4){
          magicWand(index, [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]]);
       }*/
    }
+   // FUNCTIONS FROM STACKOVERFLOW ANSWERS
    function indexOfMax(arr) {
       if (arr.length === 0) {
          return -1;
@@ -103,6 +103,23 @@
       }
 
       return maxIndex;
+   }
+   function shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+         // Pick a remaining element...
+         randomIndex = Math.floor(Math.random() * currentIndex);
+         currentIndex -= 1;
+
+         // And swap it with the current element.
+         temporaryValue = array[currentIndex];
+         array[currentIndex] = array[randomIndex];
+         array[randomIndex] = temporaryValue;
+      }
+
+      return array;
    }
 
    </script>
