@@ -37,6 +37,7 @@
       box-shadow: 0 0 0.75rem rgba(0,0,0,0.25);
       box-sizing: border-box;
       border: 1px solid #999;
+      position: relative;
    }
    div.container div.settings {
       display: block;
@@ -45,6 +46,7 @@
       min-height: 2.5rem;
       overflow-y: auto;
       margin-bottom: 0.5rem;
+      position: relative;
    }
    div.container div.settings input[type=file]{
       display: none;
@@ -112,6 +114,30 @@
       color: #fff;
       border-color: #27f;
    }
+   button.download {
+      height: 3rem;
+      width: 3rem;
+      position: relative;
+      border: none;
+      background: transparent;
+      fill: #fff;
+      display: block;
+      float: right;
+      box-sizing: border-box;
+      padding: 0.625rem;
+      cursor: pointer;
+      outline: none;
+      opacity: 0.75;
+      clear: both;
+      margin-top: calc(-3rem - 3px);
+   }
+   button.download:hover{
+      opacity: 1;
+   }
+   button.download svg {
+      width: 100%;
+      height: 100%;
+   }
    </style>
 </head>
 <body>
@@ -124,6 +150,7 @@
          <button onclick="go();">Generate Drawing</button>
       </div>
       <canvas style="display:none;"></canvas>
+      <button class="download" style="display:none;" onclick="download_drawing();"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 10h4l-7 8-7-8h4v-10h6v10zm3.213-8.246l-1.213 1.599c2.984 1.732 5 4.955 5 8.647 0 5.514-4.486 10-10 10s-10-4.486-10-10c0-3.692 2.016-6.915 5-8.647l-1.213-1.599c-3.465 2.103-5.787 5.897-5.787 10.246 0 6.627 5.373 12 12 12s12-5.373 12-12c0-4.349-2.322-8.143-5.787-10.246z"/></svg></button>
    </div>
    <script>
    
@@ -146,6 +173,7 @@
       image_context.drawImage(image_data, 0, 0, image.width, image.height);
       var imageData = image_context.getImageData(0, 0, image.width, image.height);
       
+      document.querySelector("button.download").removeAttribute("style");
       document.querySelector("canvas").removeAttribute("style");
       var canvas = document.querySelector("canvas");
       canvas.width = image.width*5;
@@ -235,6 +263,12 @@
       }
 
       return array;
+   }
+   function download_drawing(){
+      var link = document.createElement('a');
+      link.download = 'drawing.png';
+      link.href = document.querySelector('canvas').toDataURL();
+      link.click();
    }
 
    </script>
