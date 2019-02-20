@@ -167,8 +167,15 @@
    }
    function algorithm(image_data){
       var image = document.createElement('canvas');
-      image.width = 350;
-      image.height = 350 * (image_data.height / image_data.width);
+
+      var target_pixel_count = 194250;
+      var scale_factor = Math.sqrt(target_pixel_count / (image_data.height * image_data.width));
+
+      image.width = Math.floor(image_data.width * scale_factor);
+      image.height = image.width * (image_data.height / image_data.width);
+
+      console.log(image.width);
+
       var image_context = image.getContext('2d');
       image_context.drawImage(image_data, 0, 0, image.width, image.height);
       var imageData = image_context.getImageData(0, 0, image.width, image.height);
